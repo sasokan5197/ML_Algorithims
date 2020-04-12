@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Mar 18 14:05:27 2020
+
+@author: sahanaasokan
+"""
+
+
+#Ensemble Forest Intuition
+# Pick a random k data points from the training set
+# we are picking a decision tree based on a subset
+#Decision Tree regression splits based on all the data points
+# Forest splits based on the subset
+#Choose the number of trees you want to build 
+
+#more predctions using this method.
+#you buid more trees based on the k data points
+# you use all the trees to predict values
+
+#averaging out based on multiple guesses
+#team of decision trees.
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+dataset= pd.read_csv('Position_Salaries.csv')
+x= dataset.iloc[:,1:2].values
+y= dataset.iloc[:,2].values
+
+
+
+
+# Feature Scaling
+#from sklearn.preprocessing import StandardScaler
+
+"""sc_x = StandardScaler()
+sc_y = StandardScaler()
+x= sc_x.fit_transform(x)
+y=sc_y.fit_transform(y)"""
+
+
+
+#Fitting Random forest regression to the dataset
+
+from sklearn.ensemble import RandomForestRegressor
+regressor=RandomForestRegressor(n_estimators=10, random_state=0)
+regressor.fit(x,y)
+
+#Predicting the y value based on the randomforest fit
+y_pred=regressor.predict(x)
+
+
+#We have to represent this model with more values because it is
+#non continous model.
+#Visualization with higher resolution and smoother curves
+x_grid = np.arange(min(x),max(x),0.001)# gives more values of x
+x_grid= x_grid.reshape(len(x_grid),1)
+plt.scatter(x,y,color='red')
+plt.plot(x_grid,regressor.predict(x_grid), color='blue')
+plt.title('truth or bluff Random Forest Tree Regression')
+plt.show()
+
+
+# in this model we have more steps/stairs  because there are more decision trees
+#more splits
+#more intervals
+#each level is the average of the 10 decision trees.
